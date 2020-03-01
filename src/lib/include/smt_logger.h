@@ -6,7 +6,7 @@
 #include <string>
 
 // The smt_logger library version in the form major * 10000 + minor * 100 + patch.
-#define SMT_LOGGER_VERSION 10700
+#define SMT_LOGGER_VERSION 10800
 
 /**
  * @description: Log level enum definition

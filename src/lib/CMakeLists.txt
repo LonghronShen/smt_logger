@@ -1,4 +1,4 @@
-project(smt-logger-lib CXX)
+project(smt-logger-lib)
 
 file(GLOB_RECURSE src
   ${CMAKE_CURRENT_LIST_DIR}/*.h

@@ -24,7 +24,19 @@ endif ()
 
 option(SMT_LOGGER_INSTALL "Generate the install target." ${MASTER_PROJECT})
 
-project(smt-logger)
+project(smt-logger C CXX)
+
+if(NOT CMAKE_CXX_STANDARD)
+  set(CMAKE_CXX_STANDARD 17 CACHE STRING "Set to 11, 14 or 17 to enable C++11, C++14 or C++17 builds, respectively." FORCE)
+  set_property(GLOBAL PROPERTY CXX_STANDARD_REQUIRED ON)
+endif()
+
+if(NOT CMAKE_C_STANDARD)
+  set(CMAKE_C_STANDARD 11 CACHE STRING "Set to 99 or 11 to enable C99 or C11 builds, respectively." FORCE)
+  set_property(GLOBAL PROPERTY C_STANDARD_REQUIRED ON)
+endif()
+
+set(CMAKE_CXX_EXTENSIONS ON)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
