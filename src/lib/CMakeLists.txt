@@ -69,7 +69,12 @@ if(SMT_LOGGER_INSTALL)
   set(pkgconfig ${PROJECT_BINARY_DIR}/smt-logger.pc)
   set(targets_export_name smt-logger-targets)
 
-  set(INSTALL_TARGETS smt-logger-lib fmt spdlog)
+  if(spdlog_FOUND AND fmt_FOUND)
+    set(INSTALL_TARGETS smt-logger-lib)
+  else()
+    set(INSTALL_TARGETS smt-logger-lib fmt spdlog)
+  endif()
+
   set(SMT_LOGGER_LIB_DIR ${CMAKE_INSTALL_LIBDIR} CACHE STRING "Installation directory for libraries, relative to ${CMAKE_INSTALL_PREFIX}.")
   set(SMT_LOGGER_INC_DIR ${CMAKE_INSTALL_INCLUDEDIR}/smt-logger CACHE STRING "Installation directory for include files, relative to ${CMAKE_INSTALL_PREFIX}.")
   set(SMT_LOGGER_PKGCONFIG_DIR ${CMAKE_INSTALL_LIBDIR}/pkgconfig CACHE PATH "Installation directory for pkgconfig (.pc) files, relative to ${CMAKE_INSTALL_PREFIX}.")
