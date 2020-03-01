@@ -3,7 +3,7 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO LonghronShen/smt_logger
-    REF v1.5
+    REF v1.6
     SHA512 SOURCE_SHA512
     HEAD_REF master
 )

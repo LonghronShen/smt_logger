@@ -1,4 +1,4 @@
 Source: smt-logger
-Version: 1.5
+Version: 1.6
 Build-Depends: fmt, spdlog
 Description: smt-logger
