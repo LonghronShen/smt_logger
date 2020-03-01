@@ -32,14 +32,7 @@ math(EXPR CPACK_PACKAGE_VERSION_PATCH ${CMAKE_MATCH_3})
 set(SMT_LOGGER_VERSION "${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}.${CPACK_PACKAGE_VERSION_PATCH}")
 message(STATUS "SMT Logger Version: ${SMT_LOGGER_VERSION}")
 
-if(UNIX)
-  add_library(smt-logger-lib SHARED ${src})
-elseif(WIN32)
-  add_library(smt-logger-lib STATIC ${src})
-elseif(APPLE)
-  add_library(smt-logger-lib SHARED ${src})
-endif()
-
+add_library(smt-logger-lib ${src})
 add_library(Leica::smt-logger ALIAS smt-logger-lib)
 
 set(SMT_LOGGER_DEBUG_POSTFIX d)
@@ -111,8 +104,11 @@ if(SMT_LOGGER_INSTALL)
           ARCHIVE DESTINATION ${SMT_LOGGER_LIB_DIR}
           RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 
-  install(FILES $<TARGET_PDB_FILE:${INSTALL_TARGETS}>
-          DESTINATION ${SMT_LOGGER_LIB_DIR} OPTIONAL)
+  if(NOT WIN32)
+    install(FILES $<TARGET_PDB_FILE:${INSTALL_TARGETS}>
+            DESTINATION ${SMT_LOGGER_LIB_DIR} OPTIONAL)
+  endif()
+
   install(FILES ${SMT_LOGGER_HEADERS} DESTINATION ${SMT_LOGGER_INC_DIR})
   install(FILES "${pkgconfig}" DESTINATION "${SMT_LOGGER_PKGCONFIG_DIR}")
 endif()
