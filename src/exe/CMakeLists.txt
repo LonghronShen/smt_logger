@@ -1,4 +1,4 @@
-project(smt_logger_exe CXX)
+project(smt-logger-exe CXX)
 
 file(GLOB_RECURSE src
   ${CMAKE_CURRENT_LIST_DIR}/*.h
@@ -9,7 +9,7 @@ file(GLOB_RECURSE src
   ${CMAKE_CURRENT_LIST_DIR}/*.cpp
 )
 
-add_executable(smt_logger_exe ${src})
+add_executable(smt-logger-exe ${src})
 
-target_link_libraries(smt_logger_exe
-    PUBLIC smt_logger)
+target_link_libraries(smt-logger-exe
+    PUBLIC smt-logger-lib)

@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.5)
 
 # Set the project name
-project(smt_logger_tests C CXX)
+project(smt-logger-tests C CXX)
 
 #############################################
 # Unit tests
@@ -17,10 +17,10 @@ file(GLOB_RECURSE test_src
 )
 
 # Add a testing executable
-add_executable(${CMAKE_PROJECT_NAME} ${test_src})
+add_executable(smt-logger-tests ${test_src})
 
-target_link_libraries(${CMAKE_PROJECT_NAME}
-    PUBLIC smt_logger
+target_link_libraries(smt-logger-tests
+    PUBLIC smt-logger-lib
 )
 
-add_test(NAME test_all COMMAND ${CMAKE_PROJECT_NAME})
+add_test(NAME test_all COMMAND smt-logger-tests)

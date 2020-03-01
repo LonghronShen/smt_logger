@@ -1,4 +1,4 @@
-project(smt_logger CXX)
+project(smt-logger-lib CXX)
 
 file(GLOB_RECURSE src
   ${CMAKE_CURRENT_LIST_DIR}/*.h
@@ -29,29 +29,37 @@ math(EXPR CPACK_PACKAGE_VERSION_MAJOR ${CMAKE_MATCH_1})
 math(EXPR CPACK_PACKAGE_VERSION_MINOR ${CMAKE_MATCH_2})
 math(EXPR CPACK_PACKAGE_VERSION_PATCH ${CMAKE_MATCH_3})
 
-join(SMT_LOGGER_VERSION ${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}.${CPACK_PACKAGE_VERSION_PATCH})
-message(STATUS "Version: ${SMT_LOGGER_VERSION}")
+set(SMT_LOGGER_VERSION "${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}.${CPACK_PACKAGE_VERSION_PATCH}")
+message(STATUS "SMT Logger Version: ${SMT_LOGGER_VERSION}")
 
 if(UNIX)
-  add_library(smt_logger SHARED ${src})
+  add_library(smt-logger-lib SHARED ${src})
 elseif(WIN32)
-  add_library(smt_logger STATIC ${src})
+  add_library(smt-logger-lib STATIC ${src})
 elseif(APPLE)
-  add_library(smt_logger SHARED ${src})
+  add_library(smt-logger-lib SHARED ${src})
 endif()
 
-target_include_directories(smt_logger
-  PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-  PUBLIC $<INSTALL_INTERFACE:include>)
+add_library(Leica::smt-logger ALIAS smt-logger-lib)
 
-target_link_libraries(smt_logger
+set(SMT_LOGGER_DEBUG_POSTFIX d)
+
+set_target_properties(smt-logger-lib PROPERTIES
+  VERSION ${SMT_LOGGER_VERSION} SOVERSION ${CPACK_PACKAGE_VERSION_MAJOR}
+  DEBUG_POSTFIX ${SMT_LOGGER_DEBUG_POSTFIX})
+
+target_include_directories(smt-logger-lib
+  PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include>)
+
+target_link_libraries(smt-logger-lib
   PRIVATE ${CMAKE_THREAD_LIBS_INIT}
-  PUBLIC fmt::fmt
-  PUBLIC spdlog::spdlog)
+  PRIVATE fmt::fmt
+  PRIVATE spdlog::spdlog)
 
 
 # install script
-if (SMT_LOGGER_INSTALL)
+if(SMT_LOGGER_INSTALL)
   include(GNUInstallDirs)
   include(CMakePackageConfigHelpers)
 
@@ -61,7 +69,7 @@ if (SMT_LOGGER_INSTALL)
   set(pkgconfig ${PROJECT_BINARY_DIR}/smt-logger.pc)
   set(targets_export_name smt-logger-targets)
 
-  set (INSTALL_TARGETS smt-logge)
+  set(INSTALL_TARGETS smt-logger-lib fmt spdlog)
   set(SMT_LOGGER_LIB_DIR ${CMAKE_INSTALL_LIBDIR} CACHE STRING "Installation directory for libraries, relative to ${CMAKE_INSTALL_PREFIX}.")
   set(SMT_LOGGER_INC_DIR ${CMAKE_INSTALL_INCLUDEDIR}/smt-logger CACHE STRING "Installation directory for include files, relative to ${CMAKE_INSTALL_PREFIX}.")
   set(SMT_LOGGER_PKGCONFIG_DIR ${CMAKE_INSTALL_LIBDIR}/pkgconfig CACHE PATH "Installation directory for pkgconfig (.pc) files, relative to ${CMAKE_INSTALL_PREFIX}.")
@@ -72,7 +80,7 @@ if (SMT_LOGGER_INSTALL)
     VERSION ${SMT_LOGGER_VERSION}
     COMPATIBILITY AnyNewerVersion)
   configure_file(
-    "${PROJECT_SOURCE_DIR}/cmake/fmt.pc.in"
+    "${PROJECT_SOURCE_DIR}/cmake/smt-logger.pc.in"
     "${pkgconfig}"
     @ONLY)
   configure_package_config_file(
@@ -90,7 +98,7 @@ if (SMT_LOGGER_INSTALL)
     FILES ${project_config} ${version_config}
     DESTINATION ${SMT_LOGGER_CMAKE_DIR})
   install(EXPORT ${targets_export_name} DESTINATION ${SMT_LOGGER_CMAKE_DIR}
-          NAMESPACE fmt::)
+          NAMESPACE Leica::)
 
   # Install the library and headers.
   install(TARGETS ${INSTALL_TARGETS} EXPORT ${targets_export_name}
