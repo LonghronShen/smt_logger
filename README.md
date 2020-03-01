@@ -3,7 +3,7 @@ smt_logger
 
 A log warpper based on spdlog library, provide easier API to print logs at console and write logs into file.
 
-## Basic Usage:
+## Basic Usage
 
 -------
 

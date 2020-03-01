@@ -1,0 +1,11 @@
+prefix=@CMAKE_INSTALL_PREFIX@
+exec_prefix=@CMAKE_INSTALL_PREFIX@
+libdir=${exec_prefix}/@CMAKE_INSTALL_LIBDIR@
+includedir=${prefix}/@CMAKE_INSTALL_INCLUDEDIR@
+
+Name: smt-logger
+Description: A log warpper based on spdlog library, provide easier API to print logs at console and write logs into file.
+Version: @SMT_LOGGER_VERSION@
+Libs: -L${libdir} -l@SMT_LOGGER_LIB_NAME@
+Cflags: -I${includedir}
+
