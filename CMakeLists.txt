@@ -26,12 +26,30 @@ option(SMT_LOGGER_INSTALL "Generate the install target." ${MASTER_PROJECT})
 
 project(smt-logger)
 
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+
+if (MASTER_PROJECT AND CMAKE_GENERATOR MATCHES "Visual Studio")
+  # If Microsoft SDK is installed create script run-msbuild.bat that
+  # calls SetEnv.cmd to set up build environment and runs msbuild.
+  # It is useful when building Visual Studio projects with the SDK
+  # toolchain rather than Visual Studio.
+  include(FindSetEnv)
+  if (WINSDK_SETENV)
+    set(MSBUILD_SETUP "call \"${WINSDK_SETENV}\"")
+  endif ()
+  # Set FrameworkPathOverride to get rid of MSB3644 warnings.
+  set(netfxpath "C:\\Program Files\\Reference Assemblies\\Microsoft\\Framework\\.NETFramework\\v4.0")
+  file(WRITE run-msbuild.bat "
+    ${MSBUILD_SETUP}
+    ${CMAKE_MAKE_PROGRAM} -p:FrameworkPathOverride=\"${netfxpath}\" %*")
+endif ()
+
 # change output dirs
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin)
 set(LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/lib)
 
 if (CMAKE_BUILD_TYPE STREQUAL Debug)
-        add_definitions(-DLOG_DEBUG)
+  add_definitions(-DLOG_DEBUG)
 endif ()
 
 find_package(Threads REQUIRED)
