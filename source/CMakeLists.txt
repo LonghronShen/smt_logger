@@ -1,12 +1,7 @@
 project(smt-logger VERSION 1.0.0)
 
 aux_source_directory(. DIR_SRCS)
-
-if(WIN32)
-  add_library(${PROJECT_NAME} STATIC ${DIR_SRCS})
-else()
-  add_library(${PROJECT_NAME} SHARED ${DIR_SRCS})
-endif()
+add_library(${PROJECT_NAME} STATIC ${DIR_SRCS})
 
 # Add pthread support
 find_package(Threads)
