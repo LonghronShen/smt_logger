@@ -31,38 +31,41 @@ target_include_directories(${project_name}-lib
 # Prepare exposed headers
 set_target_properties(${project_name}-lib PROPERTIES PUBLIC_HEADER "${public_headers}")
 
+set(BIN_INSTALL_DIR "bin/" CACHE STRING "BIN_INSTALL_DIR" FORCE)
+set(INCLUDE_INSTALL_DIR "include/" CACHE STRING "INCLUDE_INSTALL_DIR" FORCE)
+set(LIB_INSTALL_DIR "lib/" CACHE STRING "LIB_INSTALL_DIR" FORCE)
+set(SYSCONFIG_INSTALL_DIR "etc/${project_name}/" CACHE STRING "SYSCONFIG_INSTALL_DIR" FORCE)
+
+include(CMakePackageConfigHelpers)
+
+configure_package_config_file(
+    "${CMAKE_CURRENT_LIST_DIR}/cmake/smt-loggerConfig.cmake.in"
+    ${CMAKE_CURRENT_BINARY_DIR}/smt-loggerConfig.cmake
+    INSTALL_DESTINATION "${LIB_INSTALL_DIR}/${project_name}/cmake"
+    PATH_VARS INCLUDE_INSTALL_DIR SYSCONFIG_INSTALL_DIR)
+
+write_basic_package_version_file(
+	${CMAKE_CURRENT_BINARY_DIR}/smt-loggerConfigVersion.cmake
+	VERSION "${PACKAGE_VERSION}"
+	COMPATIBILITY SameMajorVersion)
+
 install(TARGETS ${project_name}-lib
-    EXPORT spdlog::spdlog
-    RUNTIME DESTINATION bin
-    LIBRARY DESTINATION lib
-    ARCHIVE DESTINATION lib
+    EXPORT ${project_name}-lib DESTINATION ${LIB_INSTALL_DIR}
+    RUNTIME DESTINATION ${BIN_INSTALL_DIR}
+    LIBRARY DESTINATION ${LIB_INSTALL_DIR}
+    ARCHIVE DESTINATION ${LIB_INSTALL_DIR}
     PUBLIC_HEADER DESTINATION include/${project_name}
 )
 
-# install(TARGETS ${project_name}-lib
-#         EXPORT ${project_name}-libTargets
-#         LIBRARY DESTINATION lib
-#         ARCHIVE DESTINATION lib
-#         RUNTIME DESTINATION bin
-#         PUBLIC_HEADER DESTINATION include)
+install(
+	EXPORT ${project_name}-lib DESTINATION ${LIB_INSTALL_DIR}
+	# EXPORT fmt::fmt DESTINATION ${LIB_INSTALL_DIR} FILE fmt.cmake
+	# EXPORT spdlog::spdlog DESTINATION ${LIB_INSTALL_DIR} FILE spdlog.cmake
+)
 
-# # Generate library version info which will generate xxxConfigVersion.cmake,
-# # the ${PACKAGE_VERSION} is the version defined in project()
-# include(CMakePackageConfigHelpers)
-
-# write_basic_package_version_file(
-#         ${CMAKE_CURRENT_BINARY_DIR}/${project_name}-libConfigVersion.cmake
-#         VERSION ${PACKAGE_VERSION}
-#         COMPATIBILITY SameMajorVersion)
-
-# install(EXPORT ${project_name}-libTargets
-#         FILE ${project_name}-libTargets.cmake
-#         DESTINATION "lib/cmake/${project_name}-lib")
-
-# configure_package_config_file(
-#         cmake/Config.cmake.in ${project_name}-libConfig.cmake
-#         INSTALL_DESTINATION "lib/cmake/${project_name}-lib")
-
-# install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${project_name}-libConfig.cmake
-#         ${CMAKE_CURRENT_BINARY_DIR}/${project_name}-libConfigVersion.cmake
-#         DESTINATION "lib/cmake/${project_name}-lib")
+install(
+	FILES
+		${CMAKE_CURRENT_BINARY_DIR}/smt-loggerConfig.cmake
+		${CMAKE_CURRENT_BINARY_DIR}/smt-loggerConfigVersion.cmake
+	DESTINATION ${LIB_INSTALL_DIR}/${project_name}/cmake
+)
