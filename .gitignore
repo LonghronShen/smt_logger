@@ -1,6 +1,10 @@
-build
-logs
-.idea
-/cmake-build-debug/
-/install/
-/.vscode/
+.idea/
+.vscode/
+.cache/
+.vs/
+
+build/
+logs/
+cmake-build-*/
+
+install/

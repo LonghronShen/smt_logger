@@ -1,7 +1,8 @@
-project(example)
+project(${project_name}-exe C CXX)
 
-include_directories(../include)
 aux_source_directory(. DIR_SRCS)
 
-add_executable(${PROJECT_NAME} ${DIR_SRCS})
-target_link_libraries(${PROJECT_NAME} smt-logger)
+add_executable(${project_name}-exe ${DIR_SRCS})
+
+target_link_libraries(${project_name}-exe
+    PRIVATE smt-logger-lib)

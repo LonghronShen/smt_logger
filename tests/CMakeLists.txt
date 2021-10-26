@@ -1,15 +1,20 @@
-project(tests)
+project(${project_name}-tests C CXX)
 
-find_package(GTest CONFIG REQUIRED)
-
-include_directories(../include)
+enable_testing()
 
 aux_source_directory(. DIR_SRCS)
-add_executable(${PROJECT_NAME} ${DIR_SRCS})
 
-target_link_libraries(${PROJECT_NAME}
-        smt-logger
-        GTest::gtest
-        GTest::gtest_main)
+add_executable(${project_name}-tests ${DIR_SRCS})
 
-add_test(AllTestsInMain ${PROJECT_NAME})
+target_link_libraries(
+  ${project_name}-tests
+  PRIVATE smt-logger-lib
+  PRIVATE gtest_main)
+
+set_target_properties(
+  ${project_name}-tests
+  PROPERTIES CXX_STANDARD 20
+             CXX_EXTENSIONS OFF
+             CXX_STANDARD_REQUIRED ON)
+
+add_test(AllTestsInMain ${project_name}-tests)
